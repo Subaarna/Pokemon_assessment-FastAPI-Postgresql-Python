@@ -1,7 +1,7 @@
 # Pokémon API Project
 
 This project implements a RESTful API using FastAPI to serve Pokémon data fetched from PokeAPI and stored in a PostgreSQL database.
-
+With UI given you can easily filter every pokemon according to their type and names.
 ## Setup Instructions
 
 1. Clone the repository:
@@ -28,3 +28,15 @@ This project implements a RESTful API using FastAPI to serve Pokémon data fetch
 9. Run the Fast-API server
 ``` uvicorn main:app --reload ```
 10. Load the index.html and enjoy your Pokemon app 🤙
+
+Some API endpoints
+Send a GET request to `/api/v1/pokemons/all` to retrieve all Pokémon.
+
+### Filter Pokémon
+
+Send a GET request to `/api/v1/pokemons/?name=charizard&type=fire` to filter Pokémon by name and type.
+
+## Configuration
+
+- Database connection details and other configurations are managed in `config.py` and `.env`.
+
