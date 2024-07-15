@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Viewer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #ffcb05;
+            color: #333;
+            border-bottom: 2px solid #d8a700;
+            border-radius: 8px;
+        }
+        .search-bar, .filter-bar {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .search-bar input, .filter-bar select, .filter-bar button {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+        .search-bar input:focus, .filter-bar select:focus, .filter-bar button:hover {
+            border-color: #ffcb05;
+        }
+        .filter-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .pokemon-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px;
+            display: inline-block;
+            width: 220px;
+            text-align: center;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .pokemon-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .pokemon-image {
+            width: 120px;
+            height: 120px;
+        }
+        .loading, .error {
+            font-size: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .error {
+            color: #d9534f;
+        }
+        @media (max-width: 768px) {
+            .pokemon-card {
+                width: 100%;
+                max-width: 300px;
+            }
+            .filter-bar {
+                flex-direction: column;
+            }
+            .filter-bar select, .filter-bar button {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Pokémon Viewer</h1>
+    </header>
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" id="searchName" placeholder="Search by name..." />
+            <button onclick="fetchPokemons()">Search</button>
+        </div>
+        <div class="filter-bar">
+            <label for="filterType">Filter by type:</label>
+            <select id="filterType">
+                <option value="">All</option>
+                <option value="grass">Grass</option>
+                <option value="poison">Poison</option>
+                <option value="fire">Fire</option>
+                <option value="flying">Flying</option>
+                <option value="water">Water</option>
+                <option value="bug">Bug</option>
+                <option value="normal">Normal</option>
+                <option value="electric">Electric</option>
+                <option value="ground">Ground</option>
+                <!-- Add more types as needed -->
+            </select>
+            <button onclick="fetchPokemons()">Filter</button>
+        </div>
+        <div id="pokemonList" class="loading">Loading Pokémon...</div>
+    </div>
+    <script>
+        const apiUrl = 'http://127.0.0.1:8000/api/v1/pokemons';
+
+        async function fetchPokemons() {
+            const nameFilter = document.getElementById('searchName').value;
+            const typeFilter = document.getElementById('filterType').value;
+            const url = new URL(apiUrl);
+
+            if (nameFilter) {
+                url.searchParams.append('name', nameFilter);
+            }
+            if (typeFilter) {
+                url.searchParams.append('type', typeFilter);
+            }
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const pokemons = await response.json();
+                displayPokemons(pokemons);
+            } catch (error) {
+                document.getElementById('pokemonList').innerHTML = `Error fetching Pokémon data: ${error.message}`;
+                console.error('Error fetching Pokémon data:', error);
+            }
+        }
+
+        function displayPokemons(pokemons) {
+            const pokemonList = document.getElementById('pokemonList');
+            pokemonList.innerHTML = '';
+            if (pokemons.length === 0) {
+                pokemonList.innerHTML = 'No Pokémon found.';
+                return;
+            }
+            pokemons.forEach(pokemon => {
+                const card = document.createElement('div');
+                card.className = 'pokemon-card';
+                card.innerHTML = `
+                    <img src="${pokemon.image}" alt="${pokemon.name}" class="pokemon-image" />
+                    <h3>${pokemon.name}</h3>
+                    <p>Types: ${pokemon.types.join(', ')}</p>
+                `;
+                pokemonList.appendChild(card);
+            });
+        }
+
+        // Initial load
+        fetchPokemons();
+    </script>
+</body>
+</html>
