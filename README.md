@@ -39,4 +39,7 @@ Send a GET request to `/api/v1/pokemons/?name=charizard&type=fire` to filter Pok
 ## Configuration
 
 - Database connection details and other configurations are managed in `config.py` and `.env`.
+### Deployed!! 🚀
+``` https://subarna00-pokemon.hf.space/index.html```
+``` https://subarna00-pokemon.hf.space/docs ```
 
