@@ -1,7 +1,7 @@
 # Pokémon API Project
 
 This project implements a RESTful API using FastAPI to serve Pokémon data fetched from PokeAPI and stored in a PostgreSQL database.
-With UI given you can easily filter every pokemon according to their type and names.
+With UI given you can easily filter every pokemon according to their type and names. API endpoints are set in a way that it allows you to filter the pokemon according to their types or name.
 ## Setup Instructions
 
 1. Clone the repository:
